@@ -45,14 +45,13 @@ INSTALLED_APPS = [
 
     # 3rd part
     'rest_framework',
-    'rest_framework.authentication'
+    'rest_framework.authentication',
+    'rest_framework.authtoken',
 ]
 
 REST_FRAMEWORK = {
   'DEFAULT_AUTHENTICATION_CLASSES': [
-    'rest_framework.authentication.BasicAuthentication',
-    'rest_framework.authentication.SessionAuthentication',
-    'rest_framework.authentication.TokenAuthentication',
+    'accounts.authentication.ExpiringTokenAuthentication',
   ]
 }
 
@@ -135,3 +134,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Token
+
+TOKEN_EXPIRES_AFTER_SECOND = 30
