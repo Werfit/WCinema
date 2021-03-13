@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 class Hall(models.Model):
   name = models.CharField(max_length=255)
@@ -30,3 +31,13 @@ class MovieSession(models.Model):
 
   def __str__(self):
     return 'Movie: {}'.format(self.name)
+
+
+class MovieOrder(models.Model):
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  session = models.ForeignKey(MovieSession, on_delete=models.CASCADE)
+
+  tickets_number = models.PositiveIntegerField(default=1)
+
+  def __str__(self):
+    return "Order: {}x{}".format(user.username, session.name)

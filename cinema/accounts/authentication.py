@@ -10,6 +10,7 @@ from django.conf import settings
 def expires_in(token):
   time_elapsed = timezone.now() - token.created
   left_time = timedelta(seconds=settings.TOKEN_EXPIRES_AFTER_SECOND) - time_elapsed
+  
   return left_time
 
 # Checks if token is expired

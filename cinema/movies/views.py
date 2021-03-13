@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
+from .permissions import *
 from .serializers import *
 from .models import *
 
@@ -15,18 +16,36 @@ class HallViewSet(viewsets.ModelViewSet):
 class MovieSessionViewSet(viewsets.ModelViewSet):
   serializer_class = MovieSessionSerializer
   queryset = MovieSession.objects.all()
-  permission_classes = (permissions.IsAdminUser, )
+  permission_classes = (permissions.AllowAny, )
 
-  @action(detail=True, methods=['post'])
+  @action(
+    detail=True,
+    methods=['post'],
+    permission_classes=[IsAuthenticatedAndNotAdminUser]
+  )
   def buy_ticket(self, request, pk=None):
+    # Increasing amount of bought tickets
     movie_session = MovieSession.objects.get(id=pk)
-
     movie_session.tickets_bought += 1
     movie_session.save()
 
-    return Response(MovieSessionSerializer(movie_session).data, status=status.HTTP_200_OK)
+    order = MovieOrderSerializer(data={
+      "user": request.user.id,
+      "session": movie_session.id
+    })
+    order.is_valid(raise_exception=True)
+    order = order.save()
 
-  @action(detail=True, methods=['patch'])
+    return Response({
+      "movie": MovieSessionSerializer(movie_session).data,
+      "order": MovieOrderSerializer(order).data,
+    }, status=status.HTTP_200_OK)
+
+
+  @action(
+    detail=True,
+    methods=['patch'],
+    permission_classes=(permissions.IsAdminUser, ))
   def change_moviesession(self, request, pk=None):
     movie_session = MovieSession.objects.filter(id=pk)
 

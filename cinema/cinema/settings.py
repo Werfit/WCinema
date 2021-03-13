@@ -136,5 +136,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Token
-
-TOKEN_EXPIRES_AFTER_SECOND = 30
+# Expiration Time 1 hour
+TOKEN_EXPIRES_AFTER_SECOND = 3600

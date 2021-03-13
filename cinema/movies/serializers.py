@@ -13,3 +13,9 @@ class MovieSessionSerializer(serializers.ModelSerializer):
     model = MovieSession
     fields = '__all__'
     ordering = 'name'
+
+
+class MovieOrderSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = MovieOrder
+    fields = '__all__'
