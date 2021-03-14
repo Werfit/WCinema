@@ -1,8 +1,8 @@
-from rest_framework import viewsets
-from rest_framework import permissions
-from rest_framework import status
+from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
+
+from datetime import timedelta
 
 from .permissions import *
 from .serializers import *
@@ -12,11 +12,42 @@ class HallViewSet(viewsets.ModelViewSet):
   serializer_class = HallSerializer
   queryset = Hall.objects.all()
 
+  @action(
+    detail=True,
+    methods=['patch'],
+    permission_classes=(permissions.IsAdminUser, )
+  )
+  def change_hall(self, request, pk=None):
+    hall = Hall.objects.filter(id=pk)
+
+    for session in hall[0].sessions.all():
+      if session.tickets_bought != 0:
+        return Response({
+          "detail": "At least one ticket was bought. You can't edit this hall"
+        }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    hall.update(**request.data)
+
+    return Response({
+      "hall": HallSerializer(hall[0]).data
+    }, status=status.HTTP_200_OK)
+
 
 class MovieSessionViewSet(viewsets.ModelViewSet):
   serializer_class = MovieSessionSerializer
   queryset = MovieSession.objects.all()
   permission_classes = (permissions.AllowAny, )
+
+  @action(
+    detail=True,
+    methods=['get']
+  )
+  def get_free_places(self, request, pk=None):
+    movie_session = MovieSession.objects.get(id=pk)
+
+    return Response({
+      "free_places": movie_session.hall.size - movie_session.tickets_bought
+    })
 
   @action(
     detail=True,
@@ -26,19 +57,34 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
   def buy_ticket(self, request, pk=None):
     # Increasing amount of bought tickets
     movie_session = MovieSession.objects.get(id=pk)
+
+    # Checking for free places
+    if movie_session.tickets_bought + 1 > movie_session.hall.size:
+      return Response({
+        "detail": "The hall is full"
+      }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    # Checking if the place is booked
+    for ticket in movie_session.tickets.all():
+      if ticket.place == request.data["place"]:
+        return Response({
+          "detail": "This place is already booked. You can't book this one"
+        }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
     movie_session.tickets_bought += 1
     movie_session.save()
 
-    order = MovieOrderSerializer(data={
+    ticket = MovieTicketSerializer(data={
       "user": request.user.id,
-      "session": movie_session.id
+      "session": movie_session.id,
+      "place": request.data["place"]
     })
-    order.is_valid(raise_exception=True)
-    order = order.save()
+    ticket.is_valid(raise_exception=True)
+    ticket = order.save()
 
     return Response({
       "movie": MovieSessionSerializer(movie_session).data,
-      "order": MovieOrderSerializer(order).data,
+      "ticket": MovieTicketSerializer(ticket).data,
     }, status=status.HTTP_200_OK)
 
 
@@ -59,5 +105,3 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
     return Response({
       "session": MovieSessionSerializer(movie_session[0]).data
     }, status=status.HTTP_200_OK)
-
-  # permission_classes = (permissions.IsAdminUser)

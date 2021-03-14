@@ -14,7 +14,7 @@ class Hall(models.Model):
 
 
 class MovieSession(models.Model):
-  hall = models.ForeignKey(Hall, on_delete=models.CASCADE)
+  hall = models.ForeignKey(Hall, on_delete=models.CASCADE, related_name='sessions')
   name = models.CharField(max_length=255)
 
   price = models.PositiveIntegerField()
@@ -33,11 +33,11 @@ class MovieSession(models.Model):
     return 'Movie: {}'.format(self.name)
 
 
-class MovieOrder(models.Model):
+class MovieTicket(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
-  session = models.ForeignKey(MovieSession, on_delete=models.CASCADE)
+  session = models.ForeignKey(MovieSession, on_delete=models.CASCADE, related_name='tickets')
 
-  tickets_number = models.PositiveIntegerField(default=1)
+  place = models.PositiveSmallIntegerField()
 
   def __str__(self):
-    return "Order: {}x{}".format(user.username, session.name)
+    return "Order: {}x{x}".format(user.username, session.name)
