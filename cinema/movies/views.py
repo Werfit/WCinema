@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from datetime import timedelta
+from datetime import timedelta, date, datetime
 
 from .permissions import *
 from .serializers import *
@@ -37,6 +37,37 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
   serializer_class = MovieSessionSerializer
   queryset = MovieSession.objects.all()
   permission_classes = (permissions.AllowAny, )
+
+  days_options = {
+    "today": date.today(),
+    "tomorrow": date.today() + timedelta(days=1)
+  }
+
+  def filter_by_day(self, day):
+    return MovieSession.objects.filter(
+      start_day__lte=day,
+      end_day__gte=day
+    )
+
+  def list(self, request):
+    if request.GET.get('date'):
+      filter_date = request.GET['date']
+
+      if filter_date in self.days_options.keys():
+        movies = self.filter_by_day(self.days_options[filter_date])
+
+        return Response(MovieSessionSerializer(movies, many=True).data)
+
+    return super(MovieSessionViewSet, self).list(request)
+
+  @action(
+    detail=False,
+    methods=['get']
+  )
+  def sort(self, request, pk=None):
+    filter_date, sort_buy = request.GET['date'], request.GET['sort_by']
+
+    movies = self.filter_by_day(self.days_options[filter_date])
 
   @action(
     detail=True,
