@@ -19,13 +19,15 @@ class Movie(models.Model):
   start_day = models.DateField(default=timezone.now)
   end_day = models.DateField(default=timezone.now)
 
+  desciption = models.TextField(blank=True, default='')
+
   def __str__(self):
     return 'Movie: {}'.format(self.name)
 
 
 class MovieSession(models.Model):
   hall = models.ForeignKey(Hall, on_delete=models.CASCADE, related_name='sessions')
-  movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+  movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='sessions')
 
   price = models.PositiveIntegerField()
 

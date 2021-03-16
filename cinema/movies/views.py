@@ -33,9 +33,9 @@ class HallViewSet(viewsets.ModelViewSet):
     }, status=status.HTTP_200_OK)
 
 
-class MovieSessionViewSet(viewsets.ModelViewSet):
-  serializer_class = MovieSessionSerializer
-  queryset = MovieSession.objects.all()
+class MovieViewSet(viewsets.ModelViewSet):
+  serializer_class = MovieSerializer
+  queryset = Movie.objects.all()
   permission_classes = (permissions.AllowAny, )
 
   days_options = {
@@ -61,7 +61,7 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
 
         return Response(MovieSessionSerializer(movies, many=True).data)
 
-    return super(MovieSessionViewSet, self).list(request)
+    return super(MovieViewSet, self).list(request)
 
   @action(
     detail=True,
