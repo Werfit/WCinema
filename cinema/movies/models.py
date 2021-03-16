@@ -13,9 +13,19 @@ class Hall(models.Model):
     return 'Hall: {} x {}'.format(self.name, self.size)
 
 
+class Movie(models.Model):
+  name = models.CharField(max_length=255)
+
+  start_day = models.DateField(default=timezone.now)
+  end_day = models.DateField(default=timezone.now)
+
+  def __str__(self):
+    return 'Movie: {}'.format(self.name)
+
+
 class MovieSession(models.Model):
   hall = models.ForeignKey(Hall, on_delete=models.CASCADE, related_name='sessions')
-  name = models.CharField(max_length=255)
+  movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
 
   price = models.PositiveIntegerField()
 
@@ -23,14 +33,10 @@ class MovieSession(models.Model):
   start = models.DateTimeField(default=timezone.now)
   end = models.DateTimeField(default=timezone.now)
 
-  # Session Period
-  start_day = models.DateField(default=timezone.now)
-  end_day = models.DateField(default=timezone.now)
-
   tickets_bought = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], editable=False)
 
   def __str__(self):
-    return 'Movie: {}'.format(self.name)
+    return 'Session: {}'.format(self.movie.name)
 
 
 class MovieTicket(models.Model):
@@ -40,4 +46,4 @@ class MovieTicket(models.Model):
   place = models.PositiveSmallIntegerField()
 
   def __str__(self):
-    return "Order: {}x{x}".format(user.username, session.name)
+    return "Order: {}x{}".format(self.user.username, self.session.movie.name)

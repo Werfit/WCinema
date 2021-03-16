@@ -45,29 +45,23 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
 
   def filter_by_day(self, day):
     return MovieSession.objects.filter(
-      start_day__lte=day,
-      end_day__gte=day
+      movie__start_day__lte=day,
+      movie__end_day__gte=day
     )
 
   def list(self, request):
     if request.GET.get('date'):
-      filter_date = request.GET['date']
+      filter_date, sort_by = request.GET['date'], request.GET.get('sort_by')
 
       if filter_date in self.days_options.keys():
         movies = self.filter_by_day(self.days_options[filter_date])
 
+        if sort_by:
+          movies = movies.order_by(sort_by)
+
         return Response(MovieSessionSerializer(movies, many=True).data)
 
     return super(MovieSessionViewSet, self).list(request)
-
-  @action(
-    detail=False,
-    methods=['get']
-  )
-  def sort(self, request, pk=None):
-    filter_date, sort_buy = request.GET['date'], request.GET['sort_by']
-
-    movies = self.filter_by_day(self.days_options[filter_date])
 
   @action(
     detail=True,
@@ -111,10 +105,10 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
       "place": request.data["place"]
     })
     ticket.is_valid(raise_exception=True)
-    ticket = order.save()
+    ticket = ticket.save()
 
     return Response({
-      "movie": MovieSessionSerializer(movie_session).data,
+      "session": MovieSessionSerializer(movie_session).data,
       "ticket": MovieTicketSerializer(ticket).data,
     }, status=status.HTTP_200_OK)
 
@@ -122,8 +116,9 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
   @action(
     detail=True,
     methods=['patch'],
-    permission_classes=(permissions.IsAdminUser, ))
-  def change_moviesession(self, request, pk=None):
+    permission_classes=(permissions.IsAdminUser, )
+  )
+  def change_movie_session(self, request, pk=None):
     movie_session = MovieSession.objects.filter(id=pk)
 
     if movie_session[0].tickets_bought != 0:
