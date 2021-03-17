@@ -1,16 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { useDispatch } from 'react-redux'
-import { getMovies } from 'actions/movies'
-
 const Navigation = () => {
-  const dispatch = useDispatch()
-
-  const test = () => {
-    dispatch(getMovies())
-  }
-
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container">
@@ -24,7 +15,7 @@ const Navigation = () => {
               <Link className="nav-link active" aria-current="page" to="#">Home</Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" onClick={ e => test() }>Update</a>
+              <a className="nav-link">Update</a>
             </li>
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" to="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

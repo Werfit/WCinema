@@ -44,10 +44,30 @@ class MovieViewSet(viewsets.ModelViewSet):
   }
 
   def filter_by_day(self, day):
-    return MovieSession.objects.filter(
-      movie__start_day__lte=day,
-      movie__end_day__gte=day
+    movies = Movie.objects.filter(
+      sessions__start__gte=day,
+      sessions__end__lte=day + timedelta(days=1)
     )
+    
+    return movies
+
+  def filter_sessions(self, movies, day):
+    res = []
+
+    for movie in movies:
+      ok_sessions = list(filter(
+        lambda session: session.start.date() >= day and session.end.date() <= day + timedelta(days=1),
+        movie.sessions.all()))
+
+      res.append({
+        "id": movie.id,
+        "name": movie.name,
+        "start_day": movie.start_day,
+        "end_day": movie.end_day,
+        "sessions": SMovieSessionSerializer(ok_sessions, many=True).data
+      })
+
+    return res
 
   def list(self, request):
     if request.GET.get('date'):
@@ -59,7 +79,10 @@ class MovieViewSet(viewsets.ModelViewSet):
         if sort_by:
           movies = movies.order_by(sort_by)
 
-        return Response(MovieSessionSerializer(movies, many=True).data)
+        movies = self.filter_sessions(movies, self.days_options[filter_date])
+
+        return Response(movies)
+
 
     return super(MovieViewSet, self).list(request)
 

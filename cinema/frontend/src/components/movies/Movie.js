@@ -2,9 +2,6 @@ import React from 'react'
 import moment from 'moment'
 
 const Movie = ({ movie }) => {
-  const title = 'Iron Man'
-  const sessions = ['12:00', '14:00']
-
   return (
     <div className='card card-body mb-4'>
       <h3 className='card-title mb-2'>
@@ -16,7 +13,7 @@ const Movie = ({ movie }) => {
       </div>
       <div className='list-group list-group-flush mt-3'>
         {
-          movie.sessions.map(session => <span key={ session.id } className='list-group-item'>{ moment(session.start).format('HH:MM') }</span>)
+          movie.sessions.map(session => <span key={ session.id } className='list-group-item'>{ moment(session.start).format('hh:mm') }</span>)
         }
       </div>
     </div>
