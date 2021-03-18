@@ -5,7 +5,7 @@ import {
 } from './types'
 
 // GET SESSION LIST
-export const getMovies = (filter_day='') => dispatch => {
+export const getMovies = (filter_day='today') => dispatch => {
   axios.get(`api/v1/movies/sessions?date=${filter_day}`)
     .then(result => dispatch({
       type: GET_MOVIES,

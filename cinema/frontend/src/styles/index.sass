@@ -8,15 +8,21 @@ a
   max-width: 500px
   margin: 0px auto
 
-  .buttons
+  .filter-buttons
     display: flex
-    justify-content: space-beteen
+    flex-direction: column
 
     button
       flex: 1
 
-      &:first-of-type
+    .filter-button-main
+      display: flex
+
+      button:first-of-type
         margin-right: 1em
 
-      &:last-of-type
+      button:last-of-type
         margin-left: 1em
+
+    .filter-button-secondary button
+      width: 100%

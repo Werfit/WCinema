@@ -13,7 +13,11 @@ const Movie = ({ movie }) => {
       </div>
       <div className='list-group list-group-flush mt-3'>
         {
-          movie.sessions.map(session => <span key={ session.id } className='list-group-item'>{ moment(session.start).format('hh:mm') }</span>)
+          movie.sessions.map(session => (
+            <span key={ session.id } className='list-group-item'>
+              { moment(session.start).format('MMMM DD') } at { moment(session.start).format('hh:mm') }
+            </span>
+          ))
         }
       </div>
     </div>

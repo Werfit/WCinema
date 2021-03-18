@@ -40,7 +40,8 @@ class MovieViewSet(viewsets.ModelViewSet):
 
   days_options = {
     "today": date.today(),
-    "tomorrow": date.today() + timedelta(days=1)
+    "tomorrow": date.today() + timedelta(days=1),
+    "all": date.today()
   }
 
   def filter_by_day(self, day):
@@ -51,13 +52,18 @@ class MovieViewSet(viewsets.ModelViewSet):
     
     return movies
 
-  def filter_sessions(self, movies, day):
+  def filter_sessions(self, movies, day, filter_date=''):
     res = []
 
     for movie in movies:
-      ok_sessions = list(filter(
-        lambda session: session.start.date() >= day and session.end.date() <= day + timedelta(days=1),
-        movie.sessions.all()))
+      if filter_date != 'all':
+        ok_sessions = list(filter(
+          lambda session: session.start.date() >= day and session.end.date() <= day + timedelta(days=1),
+          movie.sessions.all()))
+      else:
+        ok_sessions = list(filter(
+          lambda session: session.start.date() >= day,
+          movie.sessions.all()))
 
       res.append({
         "id": movie.id,
@@ -79,7 +85,7 @@ class MovieViewSet(viewsets.ModelViewSet):
         if sort_by:
           movies = movies.order_by(sort_by)
 
-        movies = self.filter_sessions(movies, self.days_options[filter_date])
+        movies = self.filter_sessions(movies, self.days_options[filter_date], filter_date)
 
         return Response(movies)
 
