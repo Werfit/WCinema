@@ -15,7 +15,7 @@ const MovieList = () => {
 
     dsp(getMovies(day))
 
-    setChosenFilter(day === 'today' ? 0 : day === '' ? -1 : 1)
+    setChosenFilter(day === 'today' ? 0 : day === 'all' ? -1 : 1)
   }
 
   return (
@@ -26,7 +26,7 @@ const MovieList = () => {
             <button className="btn btn-outline-secondary" disabled={ chosenFilter === 1 } onClick={ e => filterMovies(e, 'tomorrow') } >Tomorrow</button>
           </div>
           <div className="filter-button-secondary">
-            <button className="btn btn-outline-secondary" onClick={ e => filterMovies(e, '') }>All</button>
+            <button className="btn btn-outline-secondary" disabled={ chosenFilter === -1 } onClick={ e => filterMovies(e, 'all') }>All</button>
           </div>
         </div>
 

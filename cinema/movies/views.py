@@ -1,8 +1,10 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from django.db.models import Q, functions
 
 from datetime import timedelta, date, datetime
+from django.utils import timezone
 
 from .permissions import *
 from .serializers import *
@@ -38,59 +40,8 @@ class MovieViewSet(viewsets.ModelViewSet):
   queryset = Movie.objects.all()
   permission_classes = (permissions.AllowAny, )
 
-  days_options = {
-    "today": date.today(),
-    "tomorrow": date.today() + timedelta(days=1),
-    "all": date.today()
-  }
-
-  def filter_by_day(self, day):
-    movies = Movie.objects.filter(
-      sessions__start__gte=day,
-      sessions__end__lte=day + timedelta(days=1)
-    )
-    
-    return movies
-
-  def filter_sessions(self, movies, day, filter_date=''):
-    res = []
-
-    for movie in movies:
-      if filter_date != 'all':
-        ok_sessions = list(filter(
-          lambda session: session.start.date() >= day and session.end.date() <= day + timedelta(days=1),
-          movie.sessions.all()))
-      else:
-        ok_sessions = list(filter(
-          lambda session: session.start.date() >= day,
-          movie.sessions.all()))
-
-      res.append({
-        "id": movie.id,
-        "name": movie.name,
-        "start_day": movie.start_day,
-        "end_day": movie.end_day,
-        "sessions": SMovieSessionSerializer(ok_sessions, many=True).data
-      })
-
-    return res
-
   def list(self, request):
-    if request.GET.get('date'):
-      filter_date, sort_by = request.GET['date'], request.GET.get('sort_by')
-
-      if filter_date in self.days_options.keys():
-        movies = self.filter_by_day(self.days_options[filter_date])
-
-        if sort_by:
-          movies = movies.order_by(sort_by)
-
-        movies = self.filter_sessions(movies, self.days_options[filter_date], filter_date)
-
-        return Response(movies)
-
-
-    return super(MovieViewSet, self).list(request)
+    return Response(MovieSerializer(self.get_queryset(), many=True, context=self.request).data)
 
   @action(
     detail=True,

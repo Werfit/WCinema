@@ -27,7 +27,7 @@ class Movie(models.Model):
 
 class MovieSession(models.Model):
   hall = models.ForeignKey(Hall, on_delete=models.CASCADE, related_name='sessions')
-  movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='sessions')
+  movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='sessions', related_query_name='sessions')
 
   price = models.PositiveIntegerField()
 
