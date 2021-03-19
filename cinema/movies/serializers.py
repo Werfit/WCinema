@@ -37,6 +37,7 @@ class MovieSerializer(serializers.ModelSerializer):
     'tomorrow': date.today() + timedelta(days=1)
   }
 
+  # Filters movie sessions
   def get_sessions(self, obj):
     name = Q(movie=obj.id)
 
@@ -56,7 +57,8 @@ class MovieSerializer(serializers.ModelSerializer):
     sessions = self.get_sessions(instance)
     
     if not sessions:
-      return ''
+      return None
+
     return super(MovieSerializer, self).to_representation(instance)
   
   class Meta:
