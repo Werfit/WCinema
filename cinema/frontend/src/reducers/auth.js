@@ -1,0 +1,46 @@
+import {
+  USER_SUCCESS,
+  USER_LOADING,
+  USER_LOADED,
+  USER_FAILED
+} from 'actions/types'
+
+const initialState = {
+  user: null,
+  isAuth: false,
+  token: localStorage.getItem('usr_token'),
+  isLoading: false
+}
+
+export default function (state=initialState, action) {
+  switch (action.type) {
+    case USER_SUCCESS:
+      localStorage.setItem('usr_token', action.payload.token)
+      return {
+        ...state,
+        user: action.payload.user,
+        isAuth: true
+      }
+    case USER_LOADING:
+      return {
+        ...state,
+        isLoading: true
+      }
+    case USER_LOADED:
+      return {
+        ...state,
+        isLoading: false,
+        isAuth: true,
+        user: action.payload
+      }
+    case USER_FAILED:
+      localStorage.removeItem('usr_token')
+      return {
+        ...state,
+        user: null,
+        isAuth: false
+      }
+    default:
+      return state
+  }
+}

@@ -1,2 +1,8 @@
 // MOVIES
 export const GET_MOVIES = 'GET_MOVIES'
+
+// AUTHENTICATION
+export const USER_SUCCESS = 'USER_SUCCESS'
+export const USER_LOADING = 'USER_LOADING'
+export const USER_LOADED = 'USER_LOADED'
+export const USER_FAILED = 'USER_FAILED'

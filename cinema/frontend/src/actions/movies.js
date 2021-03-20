@@ -6,7 +6,7 @@ import {
 
 // GET SESSION LIST
 export const getMovies = (filter_day='today') => dispatch => {
-  axios.get(`api/v1/movies/sessions?date=${filter_day}`)
+  axios.get(`api/v1/movies/movies?date=${filter_day}`)
     .then(result => dispatch({
       type: GET_MOVIES,
       payload: result.data

@@ -3,7 +3,7 @@ import {
 } from 'actions/types'
 
 const initalState = {
-  sessions: [],
+  list: [],
   isLoading: true
 }
 
@@ -12,7 +12,7 @@ export default function (state=initalState, action) {
     case GET_MOVIES:
       return {
         ...state,
-        sessions: [...action.payload]
+        list: [...action.payload]
       }
     default:
       return state

@@ -51,8 +51,10 @@ class LogoutUserView(APIView):
     }, status=status.HTTP_200_OK)
 
 
-# User Data View
+# User Token Check View
 class UserView(RetrieveAPIView):
   permission_classes = (permissions.IsAuthenticated, )
-  queryset = User.objects.all()
   serializer_class = UserSerializer
+
+  def get_object(self):
+    return self.request.user

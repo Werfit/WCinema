@@ -60,6 +60,7 @@ class MovieSerializer(serializers.ModelSerializer):
       return None
 
     return super(MovieSerializer, self).to_representation(instance)
+
   
   class Meta:
     model = Movie
@@ -72,6 +73,31 @@ class MovieSessionSerializer(serializers.ModelSerializer):
     model = MovieSession
     fields = '__all__'
     ordering = '-id'
+
+  def validate(self, data):
+    cleaned_data = super().validate(data)
+
+    # Checking if time is correct
+    if cleaned_data['start'] > cleaned_data['end']:
+      raise serializers.ValidationError('End Time must be later than Start Time')
+
+    # Checking if there is no more sessions at the time
+    hall = cleaned_data['hall']
+    sessions = hall.sessions.all()
+
+    start_check = Q(start__gte=cleaned_data['start'], end__lte=cleaned_data['end'])
+    end_check = Q(start__gte=cleaned_data['end'], end__lte=cleaned_data['end'])
+
+    if len(sessions.filter(start_check|end_check)) > 0:
+      raise serializers.ValidationError('Sessions in the same hall can not have the same time')
+
+    # Checking if session time in range of movie show time
+    movie = cleaned_data['movie']
+    if not (movie.start_day <= cleaned_data['start'].date() <= movie.end_day) or \
+      not (movie.start_day <= cleaned_data['end'].date() <= movie.end_day):
+      raise serializers.ValidationError('Session date is beyond the movie show time')
+
+    return cleaned_data
 
 
 class MovieTicketSerializer(serializers.ModelSerializer):

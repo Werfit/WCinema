@@ -116,3 +116,17 @@ class MovieViewSet(viewsets.ModelViewSet):
     return Response({
       "session": MovieSessionSerializer(movie_session[0]).data
     }, status=status.HTTP_200_OK)
+
+
+class MovieSessionViewSet(viewsets.ModelViewSet):
+  serializer_class = MovieSessionSerializer
+  queryset = MovieSession.objects.all()
+
+  def create(self, request):
+    data = request.data
+    movie_session = MovieSessionSerializer(data=data)
+    movie_session.is_valid(raise_exception=True)
+
+    movie_session.save()
+
+    return Response(movie_session.data)

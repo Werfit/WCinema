@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { getMovies } from 'actions/movies'
 
 const MovieList = () => {
-  const movies = useSelector(state => state.movies.sessions)
+  const movies = useSelector(state => state.movies.list)
   const dsp = useDispatch()
 
   const [chosenFilter, setChosenFilter] = useState(0)

@@ -4,6 +4,7 @@ from .views import *
 router = routers.DefaultRouter()
 
 router.register('halls', HallViewSet)
-router.register('sessions', MovieViewSet)
+router.register('movies', MovieViewSet)
+router.register('sessions', MovieSessionViewSet)
 
 urlpatterns = router.urls

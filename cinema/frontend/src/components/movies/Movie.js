@@ -15,7 +15,7 @@ const Movie = ({ movie }) => {
         {
           movie.sessions.length !== 0 ? movie.sessions.map(session => (
             <span key={ session.id } className='list-group-item'>
-              { moment(session.start).format('MMMM DD') } at { moment(session.start).format('hh:mm') }
+              { moment(session.start).format('MMMM DD') } at { moment(session.start).format('HH:mm') }
             </span>
           )) : <span className='list-group-item'>No sessions today</span>
         }
