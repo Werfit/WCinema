@@ -10,6 +10,7 @@ from .serializers import *
 
 # Log In User View
 class LoginUserView(APIView):
+  permission_classes = (permissions.AllowAny, )
   def post(self, request):
     serializer = LoginUserSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)

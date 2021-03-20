@@ -8,7 +8,7 @@ import Navigation from '../layout/Navigation'
 
 const Login = () => {
   const dsp = useDispatch()
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+  const isAuthenticated = useSelector(state => state.auth.isAuth)
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')

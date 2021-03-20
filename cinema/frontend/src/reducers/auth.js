@@ -18,7 +18,7 @@ export default function (state=initialState, action) {
       localStorage.setItem('usr_token', action.payload.token)
       return {
         ...state,
-        user: action.payload.user,
+        ...action.payload,
         isAuth: true
       }
     case USER_LOADING:
@@ -34,11 +34,13 @@ export default function (state=initialState, action) {
         user: action.payload
       }
     case USER_FAILED:
-      localStorage.removeItem('usr_token')
+      // localStorage.removeItem('usr_token')
       return {
         ...state,
         user: null,
-        isAuth: false
+        isAuth: false,
+        token: null,
+        isLoading: false
       }
     default:
       return state

@@ -5,7 +5,7 @@ export default getState => {
     }
   }
 
-  token = getState().auth.token
+  const token = getState().auth.token
 
   if (token)
     config.headers['Authorization'] = `Token ${token}`

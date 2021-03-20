@@ -1,6 +1,7 @@
 const path = require('path')
 
 module.exports = {
+  entry: ['@babel/polyfill', './cinema/frontend/src/index.js'],
   module: {
     rules: [
       {
