@@ -41,12 +41,21 @@ class MovieViewSet(viewsets.ModelViewSet):
   permission_classes = (permissions.AllowAny, )
 
   def list(self, request):
-    movies = MovieSerializer(self.get_queryset(), many=True, context=self.request).data
+    movies = MovieSerializer(self.get_queryset(), many=True, context={"request": self.request}).data
 
     # Removes Null
     res = filter(lambda movie: movie, movies)
 
     return Response(res)
+
+  def retrieve(self, request, pk=None):
+    movie = Movie.objects.get(name__iexact=pk)
+    return Response(
+      MovieSerializer(movie, context={ 
+        "request": request,
+        "isRetrieve": True
+      }).data
+    )
 
   @action(
     detail=True,

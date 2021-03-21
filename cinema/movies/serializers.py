@@ -41,7 +41,9 @@ class MovieSerializer(serializers.ModelSerializer):
   def get_sessions(self, obj):
     name = Q(movie=obj.id)
 
-    filter_date = self.context.GET.get('date')
+    req = self.context['request']
+    filter_date = req.GET.get('date')
+
     if filter_date in self.filter_dates:
       later = Q(start__gte=self.filter_dates[filter_date])
       earlier = Q(end__lte=self.filter_dates[filter_date] + timedelta(days=1))
@@ -51,12 +53,13 @@ class MovieSerializer(serializers.ModelSerializer):
 
     later = Q(start__gte=self.filter_dates['today'])
     sessions = MovieSession.objects.filter(name & later)
+
     return MovieSessionSerializer(sessions, many=True).data
 
   def to_representation(self, instance):
     sessions = self.get_sessions(instance)
     
-    if not sessions:
+    if not sessions and not self.context.get('isRetrieve'):
       return None
 
     return super(MovieSerializer, self).to_representation(instance)

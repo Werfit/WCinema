@@ -14,7 +14,7 @@ class Hall(models.Model):
 
 
 class Movie(models.Model):
-  name = models.CharField(max_length=255)
+  name = models.CharField(max_length=255, unique=True)
 
   start_day = models.DateField(default=timezone.now)
   end_day = models.DateField(default=timezone.now)

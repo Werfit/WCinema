@@ -1,7 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+import { useDispatch, useSelector } from 'react-redux'
+import { logOutUser } from 'actions/auth'
+
 const Navigation = () => {
+  const dsp = useDispatch()
+  const isAuthenticated = useSelector(state => state.auth.isAuth)
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container">
@@ -12,25 +18,29 @@ const Navigation = () => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/">Home</Link>
+              <Link className="nav-link" aria-current="page" to="/">Home</Link>
             </li>
-            <li className="nav-item">
-              <a className="nav-link">Update</a>
-            </li>
-            <li className="nav-item dropdown">
+            {
+              !isAuthenticated && <>
+                <li className="nav-item">
+                  <Link to='/login' className="nav-link">Log In</Link>
+                </li>
+                <li className="nav-item">
+                  <Link to='/register' className="nav-link">Sign up</Link>
+                </li>
+              </>
+            }
+            { isAuthenticated && <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" to="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Sessions
+                User
               </a>
               <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><Link className="dropdown-item" to="#">Today</Link></li>
+                <li><Link className="dropdown-item" to="#">Profile</Link></li>
                 <li><Link className="dropdown-item" to="#">Tomorrow</Link></li>
                 <li><hr className="dropdown-divider" /></li>
-                <li><Link className="dropdown-item" to="#">Something else here</Link></li>
+                <li><Link className="dropdown-item" to="#" onClick={ () => dsp(logOutUser()) }>Log out</Link></li>
               </ul>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link disabled" to="#" tabIndex="-1" aria-disabled="true">Profile</Link>
-            </li>
+            </li> }
           </ul>
         </div>
       </div>

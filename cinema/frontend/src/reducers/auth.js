@@ -2,7 +2,8 @@ import {
   USER_SUCCESS,
   USER_LOADING,
   USER_LOADED,
-  USER_FAILED
+  USER_FAILED,
+  USER_LOGOUT_SUCCESS
 } from 'actions/types'
 
 const initialState = {
@@ -34,7 +35,8 @@ export default function (state=initialState, action) {
         user: action.payload
       }
     case USER_FAILED:
-      // localStorage.removeItem('usr_token')
+    case USER_LOGOUT_SUCCESS:
+      localStorage.removeItem('usr_token')
       return {
         ...state,
         user: null,

@@ -34,12 +34,12 @@ const Login = () => {
       
         <div className="input-group mb-3">
           <input
-            type="password" placeholder='Password' class="form-control"
+            type="password" placeholder='Password' className="form-control"
             value={ password }  onChange={ e => setPassword(e.target.value) }
           />
         </div>
 
-        <button type="button" class="btn btn-outline-primary btn-lg mb-3" onClick={ e => login(e) }>Login</button>
+        <button type="button" className="btn btn-outline-primary btn-lg mb-3" onClick={ e => login(e) }>Login</button>
 
         <div className="info text-center">
           Don't have an account yet? <Link to='registration/'>Sign up here</Link>
