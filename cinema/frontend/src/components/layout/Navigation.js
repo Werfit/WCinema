@@ -6,7 +6,7 @@ import { logOutUser } from 'actions/auth'
 
 const Navigation = () => {
   const dsp = useDispatch()
-  const isAuthenticated = useSelector(state => state.auth.isAuth)
+  const { isAuth: isAuthenticated, user } = useSelector(state => state.auth)
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -41,6 +41,21 @@ const Navigation = () => {
                 <li><Link className="dropdown-item" to="#" onClick={ () => dsp(logOutUser()) }>Log out</Link></li>
               </ul>
             </li> }
+            {
+              isAuthenticated && user.isStaff && (
+                <li className="nav-item dropdown">
+                  <a className="nav-link dropdown-toggle" to="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Add
+                  </a>
+                  <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><Link className="dropdown-item" to="/add/movie">Movie</Link></li>
+                    <li><Link className="dropdown-item" to="#">Hall</Link></li>
+                    <li><hr className="dropdown-divider" /></li>
+                    <li><Link className="dropdown-item" to="#" onClick={ () => dsp(logOutUser()) }>Session</Link></li>
+                  </ul>
+                </li>
+              )
+          }
           </ul>
         </div>
       </div>

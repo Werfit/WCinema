@@ -48,18 +48,18 @@ class MovieSerializer(serializers.ModelSerializer):
       later = Q(start__gte=self.filter_dates[filter_date])
       earlier = Q(end__lte=self.filter_dates[filter_date] + timedelta(days=1))
 
-      sessions = MovieSession.objects.filter(name & later & earlier)
+      sessions = MovieSession.objects.filter(name & later & earlier).order_by('start')
       return MovieSessionSerializer(sessions, many=True).data
 
     later = Q(start__gte=self.filter_dates['today'])
-    sessions = MovieSession.objects.filter(name & later)
+    sessions = MovieSession.objects.filter(name & later).order_by('start')
 
     return MovieSessionSerializer(sessions, many=True).data
 
   def to_representation(self, instance):
     sessions = self.get_sessions(instance)
     
-    if not sessions and not self.context.get('isRetrieve'):
+    if not sessions and self.context.get('isList'):
       return None
 
     return super(MovieSerializer, self).to_representation(instance)
@@ -67,7 +67,7 @@ class MovieSerializer(serializers.ModelSerializer):
   
   class Meta:
     model = Movie
-    fields = ('id', 'name', 'start_day', 'end_day', 'sessions')
+    fields = ('id', 'name', 'start_day', 'end_day', 'sessions', 'description')
     ordering = ['-id']
 
 

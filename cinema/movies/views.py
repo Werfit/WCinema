@@ -38,10 +38,13 @@ class HallViewSet(viewsets.ModelViewSet):
 class MovieViewSet(viewsets.ModelViewSet):
   serializer_class = MovieSerializer
   queryset = Movie.objects.all()
-  permission_classes = (permissions.AllowAny, )
+  permission_classes = (IsAdminOrReadOnly, )
 
   def list(self, request):
-    movies = MovieSerializer(self.get_queryset(), many=True, context={"request": self.request}).data
+    movies = MovieSerializer(self.get_queryset(), many=True, context={
+      "request": self.request,
+      "isList": True
+    }).data
 
     # Removes Null
     res = filter(lambda movie: movie, movies)
@@ -52,8 +55,7 @@ class MovieViewSet(viewsets.ModelViewSet):
     movie = Movie.objects.get(name__iexact=pk)
     return Response(
       MovieSerializer(movie, context={ 
-        "request": request,
-        "isRetrieve": True
+        "request": request
       }).data
     )
 

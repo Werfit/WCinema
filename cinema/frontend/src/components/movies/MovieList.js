@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
-import Movie from './Movie'
+import React, { useState, Suspense, lazy } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { getMovies } from 'actions/movies'
 
 const MovieList = () => {
-  const movies = useSelector(state => state.movies.list)
+  const { list: movies, isLoading } = useSelector(state => state.movies)
   const dsp = useDispatch()
 
   const [chosenFilter, setChosenFilter] = useState(0)
+
+  const Movie = lazy(() => import('./Movie'))
 
   const filterMovies = (e, day='today') => {
     e.preventDefault()
@@ -30,9 +31,11 @@ const MovieList = () => {
           </div>
         </div>
 
-      {
-        movies.map((movie) => <Movie key={ movie.id } movie={ movie } />)
-      }
+      <Suspense fallback={ <div>Loading...</div> }>
+        {
+          !isLoading && movies.map((movie) => <Movie key={ movie.id } movie={ movie } />)
+        }
+      </Suspense>
     </div>
   )
 }

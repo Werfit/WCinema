@@ -16,11 +16,8 @@ const MoviePage = ({ match }) => {
     <div>
       <Navigation />
       <Suspense fallback={ <div>Loading...</div> }>
-        { !isLoading && <Movie movie={ currentMovie }/> }
+        { !isLoading && <Movie movie={ currentMovie } detail={ true } /> }
       </Suspense>
-      {/* <Suspense>
-        { !isLoading && <Movie movie={ currentMovie } /> }
-      </Suspense> */}
     </div>
   )
 }

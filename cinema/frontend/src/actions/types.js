@@ -3,6 +3,7 @@ export const GET_MOVIES = 'GET_MOVIES'
 export const MOVIE_SUCCESS = 'MOVIE_SUCCESS'
 export const MOVIE_FAILED = 'MOVIE_FAILED'
 export const MOVIE_LOADING = 'MOVIE_LOADING'
+export const MOVIES_LOADING = 'MOVIES_LOADING'
 
 // AUTHENTICATION
 export const USER_SUCCESS = 'USER_SUCCESS'
@@ -10,3 +11,8 @@ export const USER_LOADING = 'USER_LOADING'
 export const USER_LOADED = 'USER_LOADED'
 export const USER_FAILED = 'USER_FAILED'
 export const USER_LOGOUT_SUCCESS = 'USER_LOGOUT_SUCCESS'
+
+// ADMIN
+
+// export const MOVIE_CREATED = 'MOVIE_CREATED'
+export const TEST = 'MOVIE_TEST'

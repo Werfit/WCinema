@@ -34,7 +34,7 @@ class RegisterUserView(APIView):
     token, created = Token.objects.get_or_create(user=user)
 
     return response.Response({
-      "user": RegisterUserSerializer(user).data,
+      "user": UserSerializer(user).data,
       "token": token.key
     }, status=status.HTTP_200_OK)
 

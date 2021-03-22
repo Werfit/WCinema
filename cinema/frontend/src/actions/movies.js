@@ -3,11 +3,13 @@ import axios from 'axios'
 import {
   GET_MOVIES,
   MOVIE_LOADING,
+  MOVIES_LOADING,
   MOVIE_SUCCESS
 } from './types'
 
 // GET MOVIES LIST
 export const getMovies = (filter_day='today') => async dispatch => {
+  dispatch({ type: MOVIES_LOADING })
   try {
     const result = await axios.get(`api/v1/movies/movies?date=${filter_day}`)
 
@@ -26,7 +28,6 @@ export const getMovie = name => async dispatch => {
   try {
     const result = await axios.get(`api/v1/movies/movies/${name}`)
 
-    console.log(result)
     dispatch({
       type: MOVIE_SUCCESS,
       payload: result.data

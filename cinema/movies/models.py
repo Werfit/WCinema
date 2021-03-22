@@ -19,7 +19,7 @@ class Movie(models.Model):
   start_day = models.DateField(default=timezone.now)
   end_day = models.DateField(default=timezone.now)
 
-  desciption = models.TextField(blank=True, default='')
+  description = models.TextField(blank=True, default='')
 
   def __str__(self):
     return 'Movie: {}'.format(self.name)

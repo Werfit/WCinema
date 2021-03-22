@@ -1,7 +1,9 @@
 import {
   GET_MOVIES,
   MOVIE_SUCCESS,
-  MOVIE_LOADING
+  MOVIES_LOADING,
+  MOVIE_LOADING,
+  TEST
 } from 'actions/types'
 
 const initalState = {
@@ -25,10 +27,13 @@ export default function (state=initalState, action) {
         currentMovie: action.payload
       }
     case MOVIE_LOADING:
+    case MOVIES_LOADING:
       return {
         ...state,
         isLoading: true
       }
+    case TEST:
+      return state
     default:
       return state
   }
