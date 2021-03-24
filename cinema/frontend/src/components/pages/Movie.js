@@ -13,12 +13,9 @@ const MoviePage = ({ match }) => {
   const Movie = lazy(() => import('../movies/Movie'))
 
   return (
-    <div>
-      <Navigation />
-      <Suspense fallback={ <div>Loading...</div> }>
-        { !isLoading && <Movie movie={ currentMovie } detail={ true } /> }
-      </Suspense>
-    </div>
+    <Suspense fallback={ <div>Loading...</div> }>
+      { !isLoading && <Movie movie={ currentMovie } detail={ true } /> }
+    </Suspense>
   )
 }
 

@@ -104,7 +104,20 @@ class MovieSessionSerializer(serializers.ModelSerializer):
 class MovieTicketSerializer(serializers.ModelSerializer):
   class Meta:
     model = MovieTicket
-    fields = '__all__'
+    fields = ('id', 'place', 'session')
+
+  def to_representation(self, instance):
+    date = instance.session.start.date()
+    name = instance.session.movie.name
+    price = instance.session.price
+
+    return {
+      "id": instance.id,
+      "place": instance.place,
+      "date": date,
+      "name": name,
+      "price": price
+    }
 
 
 # Short Movie and Hall serializers
@@ -123,13 +136,12 @@ class SHallSerializer(serializers.ModelSerializer):
 class SMovieSessionSerializer(serializers.ModelSerializer):
   class Meta:
     model = MovieSession
-    fields = ('id', 'price', 'tickets_bought', 'hall')
 
   def to_representation(self, instance):
     return {
       "id": instance.id,
       "price": instance.price,
-      "tickets_bought": instance.tickets_bought,
+      "tickets_bought": len(instance.tickets.all()),
       "size": instance.hall.size
     }
 

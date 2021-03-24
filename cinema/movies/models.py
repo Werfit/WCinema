@@ -35,14 +35,14 @@ class MovieSession(models.Model):
   start = models.DateTimeField(default=timezone.now)
   end = models.DateTimeField(default=timezone.now)
 
-  tickets_bought = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], editable=False)
+  # tickets_bought = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], editable=False)
 
   def __str__(self):
     return 'Session: {}'.format(self.movie.name)
 
 
 class MovieTicket(models.Model):
-  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tickets')
   session = models.ForeignKey(MovieSession, on_delete=models.CASCADE, related_name='tickets')
 
   place = models.PositiveSmallIntegerField()

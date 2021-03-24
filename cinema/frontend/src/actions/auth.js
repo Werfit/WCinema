@@ -61,7 +61,6 @@ export const loadUser = () => async (dispatch, getState) => {
 
 // LOG OUT USER
 export const logOutUser = () => async (dispatch, getState) => {
-  console.log(tokenConfig(getState))
   try {
     await axios.post('api/v1/authentication/logout/', null, tokenConfig(getState))
 

@@ -35,8 +35,7 @@ const Navigation = () => {
                 User
               </a>
               <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><Link className="dropdown-item" to="#">Profile</Link></li>
-                <li><Link className="dropdown-item" to="#">Tomorrow</Link></li>
+                <li><Link className="dropdown-item" to="/history">History</Link></li>
                 <li><hr className="dropdown-divider" /></li>
                 <li><Link className="dropdown-item" to="#" onClick={ () => dsp(logOutUser()) }>Log out</Link></li>
               </ul>

@@ -28,49 +28,45 @@ const Registration = () => {
   }
 
   return !isAuthenticated ? (
-    <div>
-      <Navigation />
+    <div className="container mt-4 wcinema-container">
+      <div className="input-group mb-3">
+        <span className="input-group-text" id="basic-addon1">#</span>
+        <input 
+          type="text" className="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1"
+          value={ username } onChange={ e => setUsername(e.target.value) }
+        />
+      </div>
+      
+      <div className="input-group mb-3">
+        <input
+          type="text" className="form-control" placeholder="Email" aria-label="Email"
+          value={ email } onChange={ e => setEmail(e.target.value) }
+        />
+        <span className="input-group-text">@</span>
+        <input
+          type="text" className="form-control" placeholder="Domain" aria-label="Domain"
+          value={ domain } onChange={ e => setDomain(e.target.value) }
+        />
+      </div>
 
-      <div className="container mt-4 wcinema-container">
-        <div className="input-group mb-3">
-          <span className="input-group-text" id="basic-addon1">#</span>
-          <input 
-            type="text" className="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1"
-            value={ username } onChange={ e => setUsername(e.target.value) }
-          />
-        </div>
-        
-        <div className="input-group mb-3">
-          <input
-            type="text" className="form-control" placeholder="Email" aria-label="Email"
-            value={ email } onChange={ e => setEmail(e.target.value) }
-          />
-          <span className="input-group-text">@</span>
-          <input
-            type="text" className="form-control" placeholder="Domain" aria-label="Domain"
-            value={ domain } onChange={ e => setDomain(e.target.value) }
-          />
-        </div>
+      <div className="input-group mb-3">
+        <input
+          type="password" placeholder='Password' className="form-control"
+          value={ password } onChange={ e => setPassword(e.target.value) }
+        />
+      </div>
 
-        <div className="input-group mb-3">
-          <input
-            type="password" placeholder='Password' className="form-control"
-            value={ password } onChange={ e => setPassword(e.target.value) }
-          />
-        </div>
+      <div className="input-group mb-3">
+        <input
+          type="password" placeholder='Repeat password' className="form-control" 
+          value={ password2 } onChange={ e => setPassword2(e.target.value) }
+        />
+      </div>
 
-        <div className="input-group mb-3">
-          <input
-            type="password" placeholder='Repeat password' className="form-control" 
-            value={ password2 } onChange={ e => setPassword2(e.target.value) }
-          />
-        </div>
+      <button type="button" className="btn btn-outline-primary btn-lg mb-3" onClick={ e => signUp(e) }>Sign up</button>
 
-        <button type="button" className="btn btn-outline-primary btn-lg mb-3" onClick={ e => signUp(e) }>Sign up</button>
-
-        <div className="info text-center">
-          You already have an account? <Link to='login/'>Log in here</Link>
-        </div>
+      <div className="info text-center">
+        You already have an account? <Link to='login/'>Log in here</Link>
       </div>
     </div>
   ) : <Redirect to='/' />

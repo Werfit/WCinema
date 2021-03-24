@@ -20,30 +20,26 @@ const Login = () => {
   }
 
   return !isAuthenticated ? (
-    <div>
-      <Navigation />
+    <div className="container mt-4 wcinema-container">
+      <div className="input-group mb-3">
+        <span className="input-group-text" id="basic-addon1">#</span>
+        <input 
+          type="text" className="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1"
+          value={ username } onChange={ e => setUsername(e.target.value) }
+        />
+      </div>
+    
+      <div className="input-group mb-3">
+        <input
+          type="password" placeholder='Password' className="form-control"
+          value={ password }  onChange={ e => setPassword(e.target.value) }
+        />
+      </div>
 
-      <div className="container mt-4 wcinema-container">
-        <div className="input-group mb-3">
-          <span className="input-group-text" id="basic-addon1">#</span>
-          <input 
-            type="text" className="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1"
-            value={ username } onChange={ e => setUsername(e.target.value) }
-          />
-        </div>
-      
-        <div className="input-group mb-3">
-          <input
-            type="password" placeholder='Password' className="form-control"
-            value={ password }  onChange={ e => setPassword(e.target.value) }
-          />
-        </div>
+      <button type="button" className="btn btn-outline-primary btn-lg mb-3" onClick={ e => login(e) }>Login</button>
 
-        <button type="button" className="btn btn-outline-primary btn-lg mb-3" onClick={ e => login(e) }>Login</button>
-
-        <div className="info text-center">
-          Don't have an account yet? <Link to='registration/'>Sign up here</Link>
-        </div>
+      <div className="info text-center">
+        Don't have an account yet? <Link to='registration/'>Sign up here</Link>
       </div>
     </div>
   ) : <Redirect to='/' />

@@ -11,13 +11,9 @@ const Home = () => {
   useEffect(() => dsp(getMovies()), [])
 
   return (
-    <>
-      <Navigation />
-
-      <div className="container mt-4">
-        <MovieList />
-      </div>
-    </>
+    <div className="container wcinema-container mt-4">
+      <MovieList />
+    </div>
   )
 }
 

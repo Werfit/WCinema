@@ -24,31 +24,27 @@ const Buy = ({ match }) => {
 
   // isAuth && !user.isStaff ?
 
-  return session ?  (
-    <div>
-      <Navigation />
-
-      <div className='container mt-4 wcinema-container'>
-        <div className="mb-3">
-          <label htmlFor="place" className="form-label">Place:</label>
-          <input type="number" id="place" className="form-control" min="0"
-            value={ place } onChange={ e => setPlace(e.target.value) }
-          />
-          <div className="form-text">Places range 0 - { session.size }</div>
-          <div className="form-text">There are { session.size - session.tickets_bought } places left</div>
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="price" className="form-label" >Price:</label>
-          <div className="input-group">
-            <span className="input-group-text">$</span>
-            <input type="number" id="price" value={ session.price } className="form-control" disabled />
-          </div>
-        </div>
-        <button type="button" className="btn btn-outline-primary btn-lg mb-3" onClick={ e => ticket(e) }>Publish</button>
+  return isAuth && !user.isStaff ? session ? (
+    <div className="container wcinema-container mt-4">
+      <div className="mb-3">
+        <label htmlFor="place" className="form-label">Place:</label>
+        <input type="number" id="place" className="form-control" min="0"
+          value={ place } onChange={ e => setPlace(e.target.value) }
+        />
+        <div className="form-text">Places range 0 - { session.size }</div>
+        <div className="form-text">There are { session.size - session.tickets_bought } places left</div>
       </div>
+
+      <div className="mb-3">
+        <label htmlFor="price" className="form-label" >Price:</label>
+        <div className="input-group">
+          <span className="input-group-text">$</span>
+          <input type="number" id="price" value={ session.price } className="form-control" disabled />
+        </div>
+      </div>
+      <button type="button" className="btn btn-outline-primary btn-lg mb-3" onClick={ e => ticket(e) }>Publish</button>
     </div>
-  ) : <div>Loading...</div>
+  ) : <div>Loading...</div> : <Redirect to='/login' />
 
   // <Redirect to='/' />
 }

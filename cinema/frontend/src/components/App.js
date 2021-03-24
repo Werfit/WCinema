@@ -16,6 +16,10 @@ import NewHall from './pages/NewHall'
 import NewSession from './pages/NewSession'
 
 import Buy from './pages/Buy'
+import History from './pages/History'
+
+import Alert from './layout/Alert'
+import Navigation from './layout/Navigation'
 
 const App = () => {
   const dsp = useDispatch()
@@ -23,6 +27,7 @@ const App = () => {
 
   return (
     <Router className='container-fluid'>
+      <Navigation />
       <Switch>
         <Route exact path='/' component={ Home } />
 
@@ -40,7 +45,9 @@ const App = () => {
 
         {/* TICKETS */}
         <Route exact path='/:id/buy_tickets' component={ Buy } />
+        <Route exact path='/history' component={ History } />
       </Switch>
+      <Alert />
     </Router>
   )
 }
