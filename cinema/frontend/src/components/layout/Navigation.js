@@ -16,7 +16,7 @@ const Navigation = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+          <ul className="navbar-nav mb-2 mb-lg-0">
             <li className="nav-item">
               <Link className="nav-link" aria-current="page" to="/">Home</Link>
             </li>
@@ -49,9 +49,9 @@ const Navigation = () => {
                   </a>
                   <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                     <li><Link className="dropdown-item" to="/add/movie">Movie</Link></li>
-                    <li><Link className="dropdown-item" to="#">Hall</Link></li>
+                    <li><Link className="dropdown-item" to="/add/hall">Hall</Link></li>
                     <li><hr className="dropdown-divider" /></li>
-                    <li><Link className="dropdown-item" to="#" onClick={ () => dsp(logOutUser()) }>Session</Link></li>
+                    <li><Link className="dropdown-item" to="/add/session">Session</Link></li>
                   </ul>
                 </li>
               )

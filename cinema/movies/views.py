@@ -70,6 +70,60 @@ class MovieViewSet(viewsets.ModelViewSet):
       "free_places": movie_session.hall.size - movie_session.tickets_bought
     })
 
+
+  @action(
+    detail=True,
+    methods=['patch'],
+    permission_classes=(permissions.IsAdminUser, )
+  )
+  def change_movie_session(self, request, pk=None):
+    movie_session = MovieSession.objects.filter(id=pk)
+
+    if movie_session[0].tickets_bought != 0:
+      return Response({
+        "detail": "At least one ticket was bought. You can't edit this session"
+      }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    movie_session.update(**request.data)
+
+    return Response({
+      "session": MovieSessionSerializer(movie_session[0]).data
+    }, status=status.HTTP_200_OK)
+
+
+class MovieSessionViewSet(viewsets.ModelViewSet):
+  serializer_class = MovieSessionSerializer
+  queryset = MovieSession.objects.all()
+
+  def create(self, request):
+    data = request.data
+    movie_session = MovieSessionSerializer(data=data)
+    movie_session.is_valid(raise_exception=True)
+
+    movie_session.save()
+
+    return Response(movie_session.data, status=status.HTTP_201_CREATED)
+
+  def retrieve(self, request, pk=None):
+    session = MovieSession.objects.get(id=pk)
+
+    return Response(SMovieSessionSerializer(session).data, status=status.HTTP_200_OK)
+
+  @action(
+    detail=False,
+    methods=['get'],
+    permission_classes=(permissions.IsAdminUser, )
+  )
+  def get_halls_and_movies_names(self, request, pk=None):
+    halls = Hall.objects.all()
+    movies = Movie.objects.all()
+
+    return Response({
+      "halls": SHallSerializer(halls, many=True).data,
+      "movies": SMovieSerializer(movies, many=True).data
+    }, status=status.HTTP_200_OK)
+
+
   @action(
     detail=True,
     methods=['post'],
@@ -107,37 +161,3 @@ class MovieViewSet(viewsets.ModelViewSet):
       "session": MovieSessionSerializer(movie_session).data,
       "ticket": MovieTicketSerializer(ticket).data,
     }, status=status.HTTP_200_OK)
-
-
-  @action(
-    detail=True,
-    methods=['patch'],
-    permission_classes=(permissions.IsAdminUser, )
-  )
-  def change_movie_session(self, request, pk=None):
-    movie_session = MovieSession.objects.filter(id=pk)
-
-    if movie_session[0].tickets_bought != 0:
-      return Response({
-        "detail": "At least one ticket was bought. You can't edit this session"
-      }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    movie_session.update(**request.data)
-
-    return Response({
-      "session": MovieSessionSerializer(movie_session[0]).data
-    }, status=status.HTTP_200_OK)
-
-
-class MovieSessionViewSet(viewsets.ModelViewSet):
-  serializer_class = MovieSessionSerializer
-  queryset = MovieSession.objects.all()
-
-  def create(self, request):
-    data = request.data
-    movie_session = MovieSessionSerializer(data=data)
-    movie_session.is_valid(raise_exception=True)
-
-    movie_session.save()
-
-    return Response(movie_session.data)

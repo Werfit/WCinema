@@ -2,15 +2,8 @@ from rest_framework import serializers
 from .models import *
 
 from django.db.models import Q
-from datetime import timedelta, date
+from django.utils import timezone 
 
-
-class IDStartDayRelatedField(serializers.RelatedField):
-   def to_representation(self, value):
-     return {
-       "id": value.id,
-       "name": value.name
-     }
 
 class HallSerializer(serializers.ModelSerializer):
   class Meta:
@@ -19,23 +12,21 @@ class HallSerializer(serializers.ModelSerializer):
     ordering = 'name'
 
 
-# Short Movie Session
-class SMovieSessionSerializer(serializers.ModelSerializer):
-  # movie = IDStartDayRelatedField(many=False, read_only=True)
-
-  class Meta:
-    model = MovieSession
-    fields = ('id', 'start', 'movie')
-    ordering = 'id'
-
-
 class MovieSerializer(serializers.ModelSerializer):
   sessions = serializers.SerializerMethodField()
 
   filter_dates = {
-    'today': date.today(),
-    'tomorrow': date.today() + timedelta(days=1)
+    'today': timezone.now().date(),
+    'tomorrow': timezone.now().date() + timezone.timedelta(days=1)
   }
+
+  def validate(self, data):
+    cleaned_data = super().validate(data)
+
+    if cleaned_data['start_day'] > cleaned_data['end_day']:
+      raise serializers.ValidationError('Movie end day can not be earlier than start')
+
+    return cleaned_data
 
   # Filters movie sessions
   def get_sessions(self, obj):
@@ -45,14 +36,21 @@ class MovieSerializer(serializers.ModelSerializer):
     filter_date = req.GET.get('date')
 
     if filter_date in self.filter_dates:
-      later = Q(start__gte=self.filter_dates[filter_date])
-      earlier = Q(end__lte=self.filter_dates[filter_date] + timedelta(days=1))
+      later_than_today = Q(start__gte=self.filter_dates[filter_date])
+      later_than_tomorrow = Q(start__gte=self.filter_dates[filter_date] + timezone.timedelta(days=1))
 
-      sessions = MovieSession.objects.filter(name & later & earlier).order_by('start')
+      m = MovieSession.objects.filter(name)
+      res = []
+
+      for _m in m:
+        if _m.start.date() >= self.filter_dates[filter_date] and _m.end.date() <= self.filter_dates[filter_date] + timezone.timedelta(days=1):
+          res.append(_m)
+
+      sessions = MovieSession.objects.filter(name & later_than_today).exclude(later_than_tomorrow).order_by('start')
       return MovieSessionSerializer(sessions, many=True).data
 
-    later = Q(start__gte=self.filter_dates['today'])
-    sessions = MovieSession.objects.filter(name & later).order_by('start')
+    later_than_today = Q(start__gte=self.filter_dates['today'])
+    sessions = MovieSession.objects.filter(name & later_than_today).order_by('start')
 
     return MovieSessionSerializer(sessions, many=True).data
 
@@ -107,3 +105,32 @@ class MovieTicketSerializer(serializers.ModelSerializer):
   class Meta:
     model = MovieTicket
     fields = '__all__'
+
+
+# Short Movie and Hall serializers
+class SMovieSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Movie
+    fields = ('id', 'name', )
+
+
+class SHallSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Hall
+    fields = ('id', 'name', )
+
+
+class SMovieSessionSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = MovieSession
+    fields = ('id', 'price', 'tickets_bought', 'hall')
+
+  def to_representation(self, instance):
+    return {
+      "id": instance.id,
+      "price": instance.price,
+      "tickets_bought": instance.tickets_bought,
+      "size": instance.hall.size
+    }
+
+

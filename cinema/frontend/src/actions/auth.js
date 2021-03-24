@@ -42,6 +42,8 @@ export const signUpUser = user => async (dispatch, getState) => {
 
 // CHECKING TOKEN
 export const loadUser = () => async (dispatch, getState) => {
+  dispatch({ type: USER_LOADING })
+  
   try {
     const result = await axios.get('api/v1/authentication/user/', tokenConfig(getState))
 

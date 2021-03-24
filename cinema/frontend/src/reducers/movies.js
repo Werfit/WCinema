@@ -1,15 +1,23 @@
 import {
+  // MOVIES
   GET_MOVIES,
   MOVIE_SUCCESS,
   MOVIES_LOADING,
   MOVIE_LOADING,
-  TEST
+
+  // ADMIN
+  TEST,
+
+  // SESSION
+  SESSION_LOADING,
+  SESSION_LOADED
 } from 'actions/types'
 
 const initalState = {
   list: [],
   isLoading: false,
-  currentMovie: null
+  currentMovie: null,
+  session: null
 }
 
 export default function (state=initalState, action) {
@@ -31,6 +39,11 @@ export default function (state=initalState, action) {
       return {
         ...state,
         isLoading: true
+      }
+    case SESSION_LOADED:
+      return {
+        ...state,
+        session: action.payload
       }
     case TEST:
       return state

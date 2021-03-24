@@ -5,6 +5,12 @@ export const MOVIE_FAILED = 'MOVIE_FAILED'
 export const MOVIE_LOADING = 'MOVIE_LOADING'
 export const MOVIES_LOADING = 'MOVIES_LOADING'
 
+// SESSIONS
+export const SESSION_LOADED = 'SESSION_LOADED'
+
+// TICKETS
+export const BUY_TICKET = 'BUY_TICKET'
+
 // AUTHENTICATION
 export const USER_SUCCESS = 'USER_SUCCESS'
 export const USER_LOADING = 'USER_LOADING'
@@ -14,5 +20,6 @@ export const USER_LOGOUT_SUCCESS = 'USER_LOGOUT_SUCCESS'
 
 // ADMIN
 
-// export const MOVIE_CREATED = 'MOVIE_CREATED'
 export const TEST = 'MOVIE_TEST'
+export const LOAD_NAMES = 'LOAD_NAMES'
+export const NAMES_LOADED = 'NAMES_LOADED'
