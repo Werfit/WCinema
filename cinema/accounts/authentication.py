@@ -6,24 +6,29 @@ from datetime import timedelta
 from django.utils import timezone
 from django.conf import settings
 
-# Counts time till token expiration
-def expires_in(token):
-  time_elapsed = timezone.now() - token.created
-  left_time = timedelta(seconds=settings.TOKEN_EXPIRES_AFTER_SECOND) - time_elapsed
-  
-  return left_time
+from .models import *
 
 # Checks if token is expired
 def is_token_expired(token):
-  return expires_in(token) < timedelta(seconds = 0)
+  time_elapsed = timezone.now() - token.created
+  left_time = timedelta(seconds=settings.TOKEN_EXPIRES_AFTER_SECONDS) - time_elapsed
+
+  return left_time < timedelta(seconds=0)
+
+# Checks if token is expired due to inactivity
+def is_token_inactive(token):
+  time_elapsed = timezone.now() - token.last_action
+  left_time = timedelta(seconds=settings.INACTIVE_TOKEN_EXPIRES_AFTER_SECONDS) - time_elapsed
+
+  return left_time < timedelta(seconds=0)
 
 # Deletes token if it's expired or returns that token is not expired
-def token_expiration_handler(token):
-  is_expired = is_token_expired(token)
+def token_expiration_handler(token, cb):
+  is_expired = cb(token)
 
   if is_expired:
     token.delete()
-    token = Token.objects.create(user=token.user)
+    token = ExpiringToken.objects.create(user=token.user)
 
   return is_expired, token
 
@@ -31,17 +36,24 @@ def token_expiration_handler(token):
 class ExpiringTokenAuthentication(TokenAuthentication):
   def authenticate_credentials(self, key):
     try:
-      token = Token.objects.get(key=key)
-    except Token.DoesNotExist:
+      token = ExpiringToken.objects.get(key=key)
+    except ExpiringToken.DoesNotExist:
       raise AuthenticationFailed("Invalid Token")
-
 
     if not token.user.is_active:
       raise AuthenticationFailed("User is not active")
 
-    is_expired, token = token_expiration_handler(token)
+    is_expired, token = token_expiration_handler(token, is_token_expired)
 
     if is_expired:
       raise AuthenticationFailed("The Token is expired")
+
+    is_expired, token = token_expiration_handler(token, is_token_inactive)
+
+    if is_expired:
+      raise AuthenticationFailed("The Token is expired due to inactivity")
+
+    token.last_action = timezone.now()
+    token.save()
 
     return token.user, token

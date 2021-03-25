@@ -4,6 +4,10 @@ import {
   NAMES_LOADED
 } from './types'
 
+import {
+  createAlert, createError
+} from './alerts'
+
 import axios from 'axios'
 import tokenConfig from 'utils/tokenConfig'
 
@@ -12,9 +16,9 @@ export const publishMovie = movie => async (dispatch, getState) => {
   try {
     await axios.post('api/v1/movies/movies/', movie, tokenConfig(getState))
 
-    dispatch({ type: TEST })
+    dispatch(createAlert('Success'))
   } catch (err) {
-    console.log(err)
+    dispatch(createError(err.response))
   }
 }
 
@@ -23,21 +27,20 @@ export const publishHall = hall => async (dispatch, getState) => {
   try {
     await axios.post('api/v1/movies/halls/', hall, tokenConfig(getState))
 
-    dispatch({ type: TEST })
+    dispatch(createAlert('Success'))
   } catch (err) {
-    console.log(err)
+    dispatch(createError('Error'))
   }
 }
 
 // CREATE SESSION
 export const publishSession = session => async (dispatch, getState) => {
   try {
-    console.log(session)
     await axios.post('api/v1/movies/sessions/', session, tokenConfig(getState))
 
-    dispatch({ type: TEST })
+    dispatch(createAlert('Success'))
   } catch (err) {
-    console.log(err.response)
+    dispatch(createError(err.response))
   }
 }
 
@@ -52,6 +55,6 @@ export const getHMNames = () => async (dispatch, getState) => {
       payload: result.data
     })
   } catch (err) {
-    console.log(err)
+    dispatch(createError(err.response))
   }
 }

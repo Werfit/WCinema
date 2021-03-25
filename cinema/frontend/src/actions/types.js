@@ -19,7 +19,10 @@ export const USER_FAILED = 'USER_FAILED'
 export const USER_LOGOUT_SUCCESS = 'USER_LOGOUT_SUCCESS'
 
 // ADMIN
-
 export const TEST = 'MOVIE_TEST'
 export const LOAD_NAMES = 'LOAD_NAMES'
 export const NAMES_LOADED = 'NAMES_LOADED'
+
+// ALERTS
+export const SHOW_ALERT = 'SHOW_ALERT'
+export const SHOW_ERROR = 'SHOW_ERROR'

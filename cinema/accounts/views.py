@@ -6,17 +6,18 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 
 from .serializers import *
-
+from .models import *
 
 # Log In User View
 class LoginUserView(APIView):
   permission_classes = (permissions.AllowAny, )
+
   def post(self, request):
     serializer = LoginUserSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     user = serializer.validated_data
 
-    token, created = Token.objects.get_or_create(user=user)
+    token, created = ExpiringToken.objects.get_or_create(user=user)
 
     return response.Response({
       "user": UserSerializer(user).data,
@@ -31,7 +32,7 @@ class RegisterUserView(APIView):
     serializer.is_valid(raise_exception=True)
     user = serializer.save()
 
-    token, created = Token.objects.get_or_create(user=user)
+    token, created = ExpiringToken.objects.get_or_create(user=user)
 
     return response.Response({
       "user": UserSerializer(user).data,
@@ -44,7 +45,7 @@ class LogoutUserView(APIView):
   permission_classes = (permissions.IsAuthenticated, )
 
   def post(self, request):
-    token = Token.objects.get(key=request.headers['Authorization'].split()[1])
+    token = ExpiringToken.objects.get(key=request.headers['Authorization'].split()[1])
     token.delete()
 
     return response.Response({
