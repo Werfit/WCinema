@@ -48,10 +48,11 @@ class ExpiringTokenAuthentication(TokenAuthentication):
     if is_expired:
       raise AuthenticationFailed("The Token is expired")
 
-    is_expired, token = token_expiration_handler(token, is_token_inactive)
+    if not token.user.is_staff:
+      is_expired, token = token_expiration_handler(token, is_token_inactive)
 
-    if is_expired:
-      raise AuthenticationFailed("The Token is expired due to inactivity")
+      if is_expired:
+        raise AuthenticationFailed("The Token is expired due to inactivity")
 
     token.last_action = timezone.now()
     token.save()
