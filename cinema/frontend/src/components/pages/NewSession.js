@@ -22,8 +22,6 @@ const NewSession = () => {
   const publish = e => {
     e.preventDefault()
 
-    console.log({ hall, movie })
-
     dsp(publishSession({ hall: +hall, movie: +movie, 
       start: moment(start).format(),
       end: moment(end).format(),

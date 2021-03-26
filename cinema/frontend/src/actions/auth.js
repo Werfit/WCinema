@@ -6,6 +6,8 @@ import {
   USER_LOGOUT_SUCCESS
 } from './types'
 
+import { createError } from './alerts'
+
 import axios from 'axios'
 import tokenConfig from 'utils/tokenConfig'
 
@@ -23,6 +25,7 @@ export const loginUser = user => async (dispatch, getState) => {
       type: USER_FAILED,
       payload: err.response
     })
+    dispatch(createError(err))
   }
 }
 
@@ -36,12 +39,13 @@ export const signUpUser = user => async (dispatch, getState) => {
       payload: result.data
     })
   } catch (err) {
-    console.log(err)
+    dispatch(createError(err.response))
   }
 }
 
 // CHECKING TOKEN
 export const loadUser = () => async (dispatch, getState) => {
+  console.log('LOADING...')
   dispatch({ type: USER_LOADING })
   
   try {
@@ -51,11 +55,13 @@ export const loadUser = () => async (dispatch, getState) => {
       type: USER_LOADED,
       payload: result.data
     })
+    console.log('DONE')
   } catch (err) {
     dispatch({
       type: USER_FAILED,
       payload: err.response
     })
+    dispatch(createError(err.response))
   }
 }
 
@@ -68,6 +74,6 @@ export const logOutUser = () => async (dispatch, getState) => {
       type: USER_LOGOUT_SUCCESS
     })
   } catch (err) {
-    console.log(err)
+    dispatch(createError(err.response))
   }
 }

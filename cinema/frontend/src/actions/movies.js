@@ -8,6 +8,8 @@ import {
   SESSION_LOADED
 } from './types'
 
+import { createError, createAlert } from './alerts'
+
 import tokenConfig from 'utils/tokenConfig'
 
 // GET MOVIES LIST
@@ -21,7 +23,7 @@ export const getMovies = (filter_day='today') => async dispatch => {
       payload: result.data
     })
   } catch (err) {
-    console.log(err)
+    dispatch(createError(err.response))
   }
 }
 
@@ -36,7 +38,7 @@ export const getMovie = name => async dispatch => {
       payload: result.data
     })
   } catch (err) {
-    console.log(err)
+    dispatch(createError(err.response))
   }
 }
 
@@ -50,7 +52,7 @@ export const loadSession = session_id => async (dispatch, getState) => {
       payload: result.data
     })
   } catch (err) {
-    console.log(err)
+    dispatch(createError(err.response))
   }
 }
 
@@ -59,10 +61,8 @@ export const buyTicket = data => async (dispatch, getState) => {
   try {
     const result = await axios.post(`api/v1/movies/sessions/${data.session_id}/buy_ticket/`, { place: data.place }, tokenConfig(getState))
 
-    dispatch({
-      type: 'TEST'
-    })
+    dispatch(createAlert('Success'))
   } catch (err) {
-    console.log(err)
+    dispatch(createError(err.response))
   }
 }

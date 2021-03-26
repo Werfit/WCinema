@@ -1,5 +1,4 @@
 import {
-  TEST,
   LOAD_NAMES,
   NAMES_LOADED
 } from './types'

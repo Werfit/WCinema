@@ -4,6 +4,8 @@ import {
 import axios from 'axios'
 import tokenConfig from 'utils/tokenConfig'
 
+import { createError } from './alerts'
+
 // LOAD TICKETS HISTORY
 export const loadTickets = () => async (dispatch, getState) => {
   try {
@@ -14,6 +16,6 @@ export const loadTickets = () => async (dispatch, getState) => {
       payload: result.data
     })
   } catch (err) {
-    console.log(err)
+    dispatch(createError(err.response))
   }
 }

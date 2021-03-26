@@ -3,8 +3,6 @@ import { Link, Redirect } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { signUpUser } from 'actions/auth'
 
-import Navigation from '../layout/Navigation'
-
 const Registration = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')

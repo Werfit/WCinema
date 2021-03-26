@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 const Errors = () => {
   const { error, response } = useSelector(state => state.alerts)
+  const [isVisible, toggleVisibility] = useState(false)
 
   const errs = {
     // COMMON
@@ -23,8 +24,19 @@ const Errors = () => {
 
   }
 
+  useEffect(() => {
+    if (response)
+      show()
+  }, [response])
+
+  const show = () => {
+    console.log(1)
+    toggleVisibility(true)
+    setTimeout(() => toggleVisibility(false), 3000)
+  }
+
   return response && (
-    <div className={ `errors alert alert-${error ? 'danger' : 'success'} alert-show` } role='alert'>
+    <div className={ `errors alert alert-${error ? 'danger' : 'success'} ${ isVisible && 'alert-show' }` } role='alert'>
       { 
         Object.entries(response).map(([key, val], index) => {
           console.log(response, errs['detail'], key, val)
