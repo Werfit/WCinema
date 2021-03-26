@@ -2,8 +2,6 @@ import React from 'react'
 import {  useSelector } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 
-import Navigation from '../layout/Navigation'
-
 const New = ({ btnFn, children }) => {
   const { isAuth: isAuthenticated, user, isLoading } = useSelector(state => state.auth)
 
