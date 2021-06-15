@@ -39,6 +39,8 @@ npm-debug.log
 /output/
 /cache/
 boilerplate.zip
+Pipfile.lock
+Pipfile
 
 # Spritesmith
 spritesmith-generated/
