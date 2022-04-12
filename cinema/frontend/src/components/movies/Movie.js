@@ -23,7 +23,7 @@ const Movie = ({ movie, detail }) => {
                 )
               }
             </span>
-          )) : <span className='list-group-item'>No sessions today</span>
+          )) : <span className='list-group-item'>No session today</span>
         }
       </div>
       {
